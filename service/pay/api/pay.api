@@ -1,0 +1,52 @@
+type (
+	// 支付创建
+	CreateRequest {
+		Uid    int64  `json:"uid"`
+		Oid    int64  `json:"oid"`
+		Amount uint64 `json:"amount"`
+	}
+	CreateResponse {
+		Id int64 `json:"id"`
+	}
+	// 支付创建
+	// 支付详情
+	DetailRequest {
+		Id int64 `json:"id"`
+	}
+	DetailResponse {
+		Id     int64  `json:"id"`
+		Uid    int64  `json:"uid"`
+		Oid    int64  `json:"oid"`
+		Amount uint64 `json:"amount"`
+		Source uint64 `json:"source"`
+		Status uint64 `json:"status"`
+	}
+	// 支付详情
+	// 支付回调
+	CallbackRequest {
+		Id     int64  `json:"id"`
+		Uid    int64  `json:"uid"`
+		Oid    int64  `json:"oid"`
+		Amount uint64 `json:"amount"`
+		Source uint64 `json:"source"`
+		Status uint64 `json:"status"`
+	}
+	CallbackResponse  {}
+// 支付回调
+)
+
+@server (
+	jwt:    Auth
+	prefix: /api
+)
+service Pay {
+	@handler Create
+	post /pay/create (CreateRequest) returns (CreateResponse)
+
+	@handler Detail
+	post /pay/detail (DetailRequest) returns (DetailResponse)
+
+	@handler Callback
+	post /pay/callback (CallbackRequest) returns (CallbackResponse)
+}
+
