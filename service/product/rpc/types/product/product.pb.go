@@ -528,6 +528,95 @@ func (x *DetailResponse) GetStatus() uint64 {
 	return 0
 }
 
+// 减产品库存
+type DecrStockRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Num           int64                  `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DecrStockRequest) Reset() {
+	*x = DecrStockRequest{}
+	mi := &file_rpc_product_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DecrStockRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DecrStockRequest) ProtoMessage() {}
+
+func (x *DecrStockRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_product_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DecrStockRequest.ProtoReflect.Descriptor instead.
+func (*DecrStockRequest) Descriptor() ([]byte, []int) {
+	return file_rpc_product_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DecrStockRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *DecrStockRequest) GetNum() int64 {
+	if x != nil {
+		return x.Num
+	}
+	return 0
+}
+
+type DecrStockResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DecrStockResponse) Reset() {
+	*x = DecrStockResponse{}
+	mi := &file_rpc_product_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DecrStockResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DecrStockResponse) ProtoMessage() {}
+
+func (x *DecrStockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_rpc_product_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DecrStockResponse.ProtoReflect.Descriptor instead.
+func (*DecrStockResponse) Descriptor() ([]byte, []int) {
+	return file_rpc_product_proto_rawDescGZIP(), []int{9}
+}
+
 var File_rpc_product_proto protoreflect.FileDescriptor
 
 const file_rpc_product_proto_rawDesc = "" +
@@ -567,12 +656,18 @@ const file_rpc_product_proto_rawDesc = "" +
 	"\x04Desc\x18\x03 \x01(\tR\x04Desc\x12\x14\n" +
 	"\x05Stock\x18\x04 \x01(\x04R\x05Stock\x12\x16\n" +
 	"\x06Amount\x18\x05 \x01(\x04R\x06Amount\x12\x16\n" +
-	"\x06Status\x18\x06 \x01(\x04R\x06Status2\xf5\x01\n" +
+	"\x06Status\x18\x06 \x01(\x04R\x06Status\"4\n" +
+	"\x10DecrStockRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x03num\x18\x02 \x01(\x03R\x03num\"\x13\n" +
+	"\x11DecrStockResponse2\x83\x03\n" +
 	"\aProduct\x129\n" +
 	"\x06Create\x12\x16.product.CreateRequest\x1a\x17.product.CreateResponse\x129\n" +
 	"\x06Update\x12\x16.product.UpdateRequest\x1a\x17.product.UpdateResponse\x129\n" +
 	"\x06Delete\x12\x16.product.DeleteRequest\x1a\x17.product.DeleteResponse\x129\n" +
-	"\x06Detail\x12\x16.product.DetailRequest\x1a\x17.product.DetailResponseB\vZ\t./productb\x06proto3"
+	"\x06Detail\x12\x16.product.DetailRequest\x1a\x17.product.DetailResponse\x12B\n" +
+	"\tDecrStock\x12\x19.product.DecrStockRequest\x1a\x1a.product.DecrStockResponse\x12H\n" +
+	"\x0fDecrStockRevert\x12\x19.product.DecrStockRequest\x1a\x1a.product.DecrStockResponseB\vZ\t./productb\x06proto3"
 
 var (
 	file_rpc_product_proto_rawDescOnce sync.Once
@@ -586,28 +681,34 @@ func file_rpc_product_proto_rawDescGZIP() []byte {
 	return file_rpc_product_proto_rawDescData
 }
 
-var file_rpc_product_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_rpc_product_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_rpc_product_proto_goTypes = []any{
-	(*CreateRequest)(nil),  // 0: product.CreateRequest
-	(*CreateResponse)(nil), // 1: product.CreateResponse
-	(*UpdateRequest)(nil),  // 2: product.UpdateRequest
-	(*UpdateResponse)(nil), // 3: product.UpdateResponse
-	(*DeleteRequest)(nil),  // 4: product.DeleteRequest
-	(*DeleteResponse)(nil), // 5: product.DeleteResponse
-	(*DetailRequest)(nil),  // 6: product.DetailRequest
-	(*DetailResponse)(nil), // 7: product.DetailResponse
+	(*CreateRequest)(nil),     // 0: product.CreateRequest
+	(*CreateResponse)(nil),    // 1: product.CreateResponse
+	(*UpdateRequest)(nil),     // 2: product.UpdateRequest
+	(*UpdateResponse)(nil),    // 3: product.UpdateResponse
+	(*DeleteRequest)(nil),     // 4: product.DeleteRequest
+	(*DeleteResponse)(nil),    // 5: product.DeleteResponse
+	(*DetailRequest)(nil),     // 6: product.DetailRequest
+	(*DetailResponse)(nil),    // 7: product.DetailResponse
+	(*DecrStockRequest)(nil),  // 8: product.DecrStockRequest
+	(*DecrStockResponse)(nil), // 9: product.DecrStockResponse
 }
 var file_rpc_product_proto_depIdxs = []int32{
 	0, // 0: product.Product.Create:input_type -> product.CreateRequest
 	2, // 1: product.Product.Update:input_type -> product.UpdateRequest
 	4, // 2: product.Product.Delete:input_type -> product.DeleteRequest
 	6, // 3: product.Product.Detail:input_type -> product.DetailRequest
-	1, // 4: product.Product.Create:output_type -> product.CreateResponse
-	3, // 5: product.Product.Update:output_type -> product.UpdateResponse
-	5, // 6: product.Product.Delete:output_type -> product.DeleteResponse
-	7, // 7: product.Product.Detail:output_type -> product.DetailResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	8, // 4: product.Product.DecrStock:input_type -> product.DecrStockRequest
+	8, // 5: product.Product.DecrStockRevert:input_type -> product.DecrStockRequest
+	1, // 6: product.Product.Create:output_type -> product.CreateResponse
+	3, // 7: product.Product.Update:output_type -> product.UpdateResponse
+	5, // 8: product.Product.Delete:output_type -> product.DeleteResponse
+	7, // 9: product.Product.Detail:output_type -> product.DetailResponse
+	9, // 10: product.Product.DecrStock:output_type -> product.DecrStockResponse
+	9, // 11: product.Product.DecrStockRevert:output_type -> product.DecrStockResponse
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -624,7 +725,7 @@ func file_rpc_product_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_rpc_product_proto_rawDesc), len(file_rpc_product_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

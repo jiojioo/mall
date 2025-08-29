@@ -28,6 +28,9 @@ type (
 	}
 	// 用户注册
 	// 用户信息
+	UserInfoRequest {
+		Id int64 `json:"id"`
+	}
 	UserInfoResponse {
 		Id       int64  `json:"id"`
 		Username string `json:"username"`
@@ -36,6 +39,7 @@ type (
 		Phone    string `json:"phone"`
 		Email    string `json:"email"`
 	}
+
 // 用户信息
 )
 
@@ -45,17 +49,9 @@ type (
 service User {
 	@handler Login
 	post /user/login (LoginRequest) returns (LoginResponse)
-
+	
 	@handler Register
 	post /user/register (RegisterRequest) returns (RegisterResponse)
-}
-
-@server (
-	jwt:    Auth
-	prefix: /api
-)
-service User {
 	@handler UserInfo
-	post /user/userinfo returns (UserInfoResponse)
+	post /user/userinfo (UserInfoRequest) returns (UserInfoResponse)
 }
-

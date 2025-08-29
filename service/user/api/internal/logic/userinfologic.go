@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"encoding/json"
 	"mall/service/user/api/internal/svc"
 	"mall/service/user/api/internal/types"
 	"mall/service/user/rpc/types/user"
@@ -24,10 +23,9 @@ func NewUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserInfo
 	}
 }
 
-func (l *UserInfoLogic) UserInfo() (resp *types.UserInfoResponse, err error) {
-	uid, _ := l.ctx.Value("uid").(json.Number).Int64()
+func (l *UserInfoLogic) UserInfo(req *types.UserInfoRequest) (resp *types.UserInfoResponse, err error) {
 	res, err := l.svcCtx.UserRpc.UserInfo(l.ctx, &user.UserInfoRequest{
-		Id: uid,
+		Id: req.Id,
 	})
 	if err != nil {
 		return nil, err

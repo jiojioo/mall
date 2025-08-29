@@ -2,7 +2,12 @@ package logic
 
 import (
 	"context"
+	"fmt"
+	"github.com/dtm-labs/dtmgrpc"
+	"google.golang.org/grpc/status"
+	"mall/common/snow"
 	"mall/service/order/rpc/types/order"
+	"mall/service/product/rpc/types/product"
 
 	"mall/service/order/api/internal/svc"
 	"mall/service/order/api/internal/types"
@@ -25,16 +30,51 @@ func NewCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateLogi
 }
 
 func (l *CreateLogic) Create(req *types.CreateRequest) (resp *types.CreateResponse, err error) {
-	res, err := l.svcCtx.OrderRpc.Create(l.ctx, &order.CreateRequest{
-		Uid:    req.Uid,
-		Pid:    req.Pid,
-		Amount: req.Amount,
-		Status: req.Status,
-	})
+	// 获取 OrderRpc BuildTarget
+	orderRpcBusiServer, err := l.svcCtx.Config.OrderRpc.BuildTarget()
 	if err != nil {
-		return nil, err
+		return nil, status.Error(100, "订单创建异常")
+	}
+
+	// 获取 ProductRpc BuildTarget
+	productRpcBusiServer, err := l.svcCtx.Config.ProductRpc.BuildTarget()
+	if err != nil {
+		return nil, status.Error(100, "订单创建异常")
+	}
+	if err := snow.InitSnowflake(1); err != nil {
+		panic(fmt.Sprintf("初始化雪花节点失败: %v", err))
+	}
+
+	// 生成ID
+	snowid, err := snow.NewSnowflakeID()
+	if err != nil {
+		fmt.Printf("生成ID失败: %v\n", err)
+		return
+	}
+	// dtm 服务的 etcd 注册地址
+	var dtmServer = "etcd://localhost:2379/dtmservice"
+	// 创建一个gid
+	gid := dtmgrpc.MustGenGid(dtmServer)
+	// 创建一个saga协议的事务
+	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
+		Add(orderRpcBusiServer+"/order.Order/Create", orderRpcBusiServer+"/order.Order/CreateRevert", &order.CreateRequest{
+			Id:     snowid,
+			Uid:    req.Uid,
+			Pid:    req.Pid,
+			Amount: req.Amount,
+			Status: 0,
+		}).
+		Add(productRpcBusiServer+"/product.Product/DecrStock", productRpcBusiServer+"/product.Product/DecrStockRevert", &product.DecrStockRequest{
+			Id:  req.Pid,
+			Num: int64(req.Amount),
+		})
+
+	// 事务提交
+	err = saga.Submit()
+	if err != nil {
+		return nil, status.Error(500, err.Error())
 	}
 	return &types.CreateResponse{
-		Id: res.Id,
+		Id: snowid,
 	}, nil
 }

@@ -36,7 +36,7 @@ type (
 )
 
 @server (
-	jwt:    Auth
+	//      jwt:    Auth
 	prefix: /api
 )
 service Pay {

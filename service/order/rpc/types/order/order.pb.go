@@ -24,10 +24,11 @@ const (
 // 订单创建
 type CreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uid           int64                  `protobuf:"varint,1,opt,name=Uid,proto3" json:"Uid,omitempty"`
-	Pid           int64                  `protobuf:"varint,2,opt,name=Pid,proto3" json:"Pid,omitempty"`
-	Amount        uint64                 `protobuf:"varint,3,opt,name=Amount,proto3" json:"Amount,omitempty"`
-	Status        uint64                 `protobuf:"varint,4,opt,name=Status,proto3" json:"Status,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	Uid           int64                  `protobuf:"varint,2,opt,name=Uid,proto3" json:"Uid,omitempty"`
+	Pid           int64                  `protobuf:"varint,3,opt,name=Pid,proto3" json:"Pid,omitempty"`
+	Amount        uint64                 `protobuf:"varint,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
+	Status        uint64                 `protobuf:"varint,5,opt,name=Status,proto3" json:"Status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -60,6 +61,13 @@ func (x *CreateRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateRequest.ProtoReflect.Descriptor instead.
 func (*CreateRequest) Descriptor() ([]byte, []int) {
 	return file_rpc_order_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CreateRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
 }
 
 func (x *CreateRequest) GetUid() int64 {
@@ -137,7 +145,7 @@ func (x *CreateResponse) GetId() int64 {
 // 订单修改
 type UpdateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Uid           int64                  `protobuf:"varint,2,opt,name=Uid,proto3" json:"Uid,omitempty"`
 	Pid           int64                  `protobuf:"varint,3,opt,name=Pid,proto3" json:"Pid,omitempty"`
 	Amount        uint64                 `protobuf:"varint,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
@@ -213,7 +221,7 @@ func (x *UpdateRequest) GetStatus() uint64 {
 
 type UpdateResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Uid           int64                  `protobuf:"varint,2,opt,name=Uid,proto3" json:"Uid,omitempty"`
 	Pid           int64                  `protobuf:"varint,3,opt,name=Pid,proto3" json:"Pid,omitempty"`
 	Amount        uint64                 `protobuf:"varint,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
@@ -290,7 +298,7 @@ func (x *UpdateResponse) GetStatus() uint64 {
 // 订单删除
 type RemoveRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -379,7 +387,7 @@ func (x *RemoveResponse) GetResult() string {
 // 订单详情
 type DetailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -423,7 +431,7 @@ func (x *DetailRequest) GetId() int64 {
 
 type DetailResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	Uid           int64                  `protobuf:"varint,2,opt,name=Uid,proto3" json:"Uid,omitempty"`
 	Pid           int64                  `protobuf:"varint,3,opt,name=Pid,proto3" json:"Pid,omitempty"`
 	Amount        uint64                 `protobuf:"varint,4,opt,name=Amount,proto3" json:"Amount,omitempty"`
@@ -589,7 +597,7 @@ func (x *ListResponse) GetData() []*DetailResponse {
 // 订单支付
 type PaidRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id            int64                  `protobuf:"varint,1,opt,name=Id,proto3" json:"Id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -671,34 +679,35 @@ var File_rpc_order_proto protoreflect.FileDescriptor
 
 const file_rpc_order_proto_rawDesc = "" +
 	"\n" +
-	"\x0frpc/order.proto\x12\x05order\"c\n" +
-	"\rCreateRequest\x12\x10\n" +
-	"\x03Uid\x18\x01 \x01(\x03R\x03Uid\x12\x10\n" +
-	"\x03Pid\x18\x02 \x01(\x03R\x03Pid\x12\x16\n" +
-	"\x06Amount\x18\x03 \x01(\x04R\x06Amount\x12\x16\n" +
-	"\x06Status\x18\x04 \x01(\x04R\x06Status\" \n" +
+	"\x0frpc/order.proto\x12\x05order\"s\n" +
+	"\rCreateRequest\x12\x0e\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\x12\x10\n" +
+	"\x03Uid\x18\x02 \x01(\x03R\x03Uid\x12\x10\n" +
+	"\x03Pid\x18\x03 \x01(\x03R\x03Pid\x12\x16\n" +
+	"\x06Amount\x18\x04 \x01(\x04R\x06Amount\x12\x16\n" +
+	"\x06Status\x18\x05 \x01(\x04R\x06Status\" \n" +
 	"\x0eCreateResponse\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"s\n" +
 	"\rUpdateRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\x12\x10\n" +
 	"\x03Uid\x18\x02 \x01(\x03R\x03Uid\x12\x10\n" +
 	"\x03Pid\x18\x03 \x01(\x03R\x03Pid\x12\x16\n" +
 	"\x06Amount\x18\x04 \x01(\x04R\x06Amount\x12\x16\n" +
 	"\x06Status\x18\x05 \x01(\x04R\x06Status\"t\n" +
 	"\x0eUpdateResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\x12\x10\n" +
 	"\x03Uid\x18\x02 \x01(\x03R\x03Uid\x12\x10\n" +
 	"\x03Pid\x18\x03 \x01(\x03R\x03Pid\x12\x16\n" +
 	"\x06Amount\x18\x04 \x01(\x04R\x06Amount\x12\x16\n" +
 	"\x06Status\x18\x05 \x01(\x04R\x06Status\"\x1f\n" +
 	"\rRemoveRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"(\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\"(\n" +
 	"\x0eRemoveResponse\x12\x16\n" +
 	"\x06Result\x18\x01 \x01(\tR\x06Result\"\x1f\n" +
 	"\rDetailRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"t\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\"t\n" +
 	"\x0eDetailResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x10\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\x12\x10\n" +
 	"\x03Uid\x18\x02 \x01(\x03R\x03Uid\x12\x10\n" +
 	"\x03Pid\x18\x03 \x01(\x03R\x03Pid\x12\x16\n" +
 	"\x06Amount\x18\x04 \x01(\x04R\x06Amount\x12\x16\n" +
@@ -708,10 +717,11 @@ const file_rpc_order_proto_rawDesc = "" +
 	"\fListResponse\x12)\n" +
 	"\x04data\x18\x01 \x03(\v2\x15.order.DetailResponseR\x04data\"\x1d\n" +
 	"\vPaidRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\x0e\n" +
-	"\fPaidResponse2\xc5\x02\n" +
+	"\x02Id\x18\x01 \x01(\x03R\x02Id\"\x0e\n" +
+	"\fPaidResponse2\x82\x03\n" +
 	"\x05Order\x125\n" +
-	"\x06Create\x12\x14.order.CreateRequest\x1a\x15.order.CreateResponse\x125\n" +
+	"\x06Create\x12\x14.order.CreateRequest\x1a\x15.order.CreateResponse\x12;\n" +
+	"\fCreateRevert\x12\x14.order.CreateRequest\x1a\x15.order.CreateResponse\x125\n" +
 	"\x06Update\x12\x14.order.UpdateRequest\x1a\x15.order.UpdateResponse\x125\n" +
 	"\x06Remove\x12\x14.order.RemoveRequest\x1a\x15.order.RemoveResponse\x125\n" +
 	"\x06Detail\x12\x14.order.DetailRequest\x1a\x15.order.DetailResponse\x12/\n" +
@@ -748,19 +758,21 @@ var file_rpc_order_proto_goTypes = []any{
 var file_rpc_order_proto_depIdxs = []int32{
 	7,  // 0: order.ListResponse.data:type_name -> order.DetailResponse
 	0,  // 1: order.Order.Create:input_type -> order.CreateRequest
-	2,  // 2: order.Order.Update:input_type -> order.UpdateRequest
-	4,  // 3: order.Order.Remove:input_type -> order.RemoveRequest
-	6,  // 4: order.Order.Detail:input_type -> order.DetailRequest
-	8,  // 5: order.Order.List:input_type -> order.ListRequest
-	10, // 6: order.Order.Paid:input_type -> order.PaidRequest
-	1,  // 7: order.Order.Create:output_type -> order.CreateResponse
-	3,  // 8: order.Order.Update:output_type -> order.UpdateResponse
-	5,  // 9: order.Order.Remove:output_type -> order.RemoveResponse
-	7,  // 10: order.Order.Detail:output_type -> order.DetailResponse
-	9,  // 11: order.Order.List:output_type -> order.ListResponse
-	11, // 12: order.Order.Paid:output_type -> order.PaidResponse
-	7,  // [7:13] is the sub-list for method output_type
-	1,  // [1:7] is the sub-list for method input_type
+	0,  // 2: order.Order.CreateRevert:input_type -> order.CreateRequest
+	2,  // 3: order.Order.Update:input_type -> order.UpdateRequest
+	4,  // 4: order.Order.Remove:input_type -> order.RemoveRequest
+	6,  // 5: order.Order.Detail:input_type -> order.DetailRequest
+	8,  // 6: order.Order.List:input_type -> order.ListRequest
+	10, // 7: order.Order.Paid:input_type -> order.PaidRequest
+	1,  // 8: order.Order.Create:output_type -> order.CreateResponse
+	1,  // 9: order.Order.CreateRevert:output_type -> order.CreateResponse
+	3,  // 10: order.Order.Update:output_type -> order.UpdateResponse
+	5,  // 11: order.Order.Remove:output_type -> order.RemoveResponse
+	7,  // 12: order.Order.Detail:output_type -> order.DetailResponse
+	9,  // 13: order.Order.List:output_type -> order.ListResponse
+	11, // 14: order.Order.Paid:output_type -> order.PaidResponse
+	8,  // [8:15] is the sub-list for method output_type
+	1,  // [1:8] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
 	1,  // [1:1] is the sub-list for extension extendee
 	0,  // [0:1] is the sub-list for field type_name

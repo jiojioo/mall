@@ -1,6 +1,6 @@
 CREATE TABLE `order`
 (
-    `id`          bigint     NOT NULL AUTO_INCREMENT,
+    `id`          bigint     NOT NULL ,
     `uid`         bigint     NOT NULL DEFAULT '0' COMMENT '用户ID',
     `pid`         bigint      NOT NULL DEFAULT '0' COMMENT '产品ID',
     `amount`      int(10) unsigned    NOT NULL DEFAULT '0' COMMENT '订单金额',

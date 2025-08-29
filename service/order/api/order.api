@@ -58,7 +58,7 @@ type (
 )
 
 @server (
-	jwt:    Auth
+	//      jwt:    Auth
 	prefix: /api
 )
 service Order {

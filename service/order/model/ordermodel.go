@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -16,6 +17,9 @@ type (
 	OrderModel interface {
 		orderModel
 		FindAllByUid(ctx context.Context, uid int64) ([]*Order, error)
+		FindOneByUid(ctx context.Context, uid int64) (*Order, error)
+		TxInsert(ctx context.Context, tx *sql.Tx, data *Order) (sql.Result, error)
+		TxUpdate(ctx context.Context, tx *sql.Tx, data *Order) error
 	}
 
 	customOrderModel struct {
@@ -29,7 +33,6 @@ func NewOrderModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) O
 		defaultOrderModel: newOrderModel(conn, c, opts...),
 	}
 }
-
 func (m *customOrderModel) FindAllByUid(ctx context.Context, uid int64) ([]*Order, error) {
 	var resp []*Order
 
@@ -46,23 +49,34 @@ func (m *customOrderModel) FindAllByUid(ctx context.Context, uid int64) ([]*Orde
 	}
 }
 
-//func (m *customOrderModel) FindAllByUid(ctx context.Context, uid int64, page, size int) ([]*Order, int64, error) {
-//	// 1. 查询总条数（用于计算总页数）
-//	var total int64
-//	countQuery := fmt.Sprintf("select count(*) from %s where uid = ?", m.table)
-//	if err := m.QueryRowCtx(ctx, &total, countQuery, uid); err != nil {
-//		return nil, 0, err
-//	}
-//
-//	// 2. 计算偏移量（分页公式：offset = (page-1)*size）
-//	offset := (page - 1) * size
-//	query := fmt.Sprintf("select %s from %s where uid = ? limit ? offset ?", orderRows, m.table)
-//
-//	// 3. 分页查询
-//	var resp []*Order
-//	if err := m.QueryRowsNoCacheCtx(ctx, &resp, query, uid, size, offset); err != nil {
-//		return nil, 0, err
-//	}
-//
-//	return resp, total, nil
-//}
+func (m *defaultOrderModel) FindOneByUid(ctx context.Context, uid int64) (*Order, error) {
+	var resp Order
+
+	query := fmt.Sprintf("select %s from %s where `uid` = ? order by create_time desc limit 1", orderRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, uid)
+
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultOrderModel) TxInsert(ctx context.Context, tx *sql.Tx, data *Order) (sql.Result, error) {
+	query := fmt.Sprintf("insert into %s (%s) values (?,?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
+	ret, err := tx.ExecContext(ctx, query, data.Id, data.Uid, data.Pid, data.Amount, data.Status)
+
+	return ret, err
+}
+
+func (m *defaultOrderModel) TxUpdate(ctx context.Context, tx *sql.Tx, data *Order) error {
+	productIdKey := fmt.Sprintf("%s%v", cacheOrderIdPrefix, data.Id)
+	_, err := m.Exec(func(conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, orderRowsWithPlaceHolder)
+		return tx.ExecContext(ctx, query, data.Uid, data.Pid, data.Amount, data.Status, data.Id)
+	}, productIdKey)
+	return err
+}

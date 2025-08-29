@@ -21,7 +21,7 @@ import (
 var (
 	orderFieldNames          = builder.RawFieldNames(&Order{})
 	orderRows                = strings.Join(orderFieldNames, ",")
-	orderRowsExpectAutoSet   = strings.Join(stringx.Remove(orderFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	orderRowsExpectAutoSet   = strings.Join(stringx.Remove(orderFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	orderRowsWithPlaceHolder = strings.Join(stringx.Remove(orderFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheOrderIdPrefix = "cache:order:id:"
@@ -87,8 +87,8 @@ func (m *defaultOrderModel) FindOne(ctx context.Context, id int64) (*Order, erro
 func (m *defaultOrderModel) Insert(ctx context.Context, data *Order) (sql.Result, error) {
 	orderIdKey := fmt.Sprintf("%s%v", cacheOrderIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Uid, data.Pid, data.Amount, data.Status)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, orderRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.Uid, data.Pid, data.Amount, data.Status)
 	}, orderIdKey)
 	return ret, err
 }

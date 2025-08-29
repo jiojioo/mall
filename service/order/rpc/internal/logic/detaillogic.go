@@ -42,5 +42,4 @@ func (l *DetailLogic) Detail(in *order.DetailRequest) (*order.DetailResponse, er
 		Status: res.Status,
 	}, nil
 
-	return &order.DetailResponse{}, nil
 }

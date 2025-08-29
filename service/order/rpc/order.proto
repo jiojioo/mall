@@ -6,10 +6,11 @@ option go_package = "./order";
 
 // 订单创建
 message CreateRequest {
-  int64 Uid = 1;
-  int64 Pid = 2;
-  uint64 Amount = 3;
-  uint64 Status = 4;
+  int64 Id = 1;
+  int64 Uid = 2;
+  int64 Pid = 3;
+  uint64 Amount = 4;
+  uint64 Status = 5;
 }
 message CreateResponse {
   int64 id = 1;
@@ -18,14 +19,14 @@ message CreateResponse {
 
 // 订单修改
 message UpdateRequest {
-  int64 id = 1;
+  int64 Id = 1;
   int64 Uid = 2;
   int64 Pid = 3;
   uint64 Amount = 4;
   uint64 Status = 5;
 }
 message UpdateResponse {
-  int64 id = 1;
+  int64 Id = 1;
   int64 Uid = 2;
   int64 Pid = 3;
   uint64 Amount = 4;
@@ -35,7 +36,7 @@ message UpdateResponse {
 
 // 订单删除
 message RemoveRequest {
-  int64 id = 1;
+  int64 Id = 1;
 }
 message RemoveResponse {
   string Result = 1;
@@ -44,10 +45,10 @@ message RemoveResponse {
 
 // 订单详情
 message DetailRequest {
-  int64 id = 1;
+  int64 Id = 1;
 }
 message DetailResponse {
-  int64 id = 1;
+  int64 Id = 1;
   int64 Uid = 2;
   int64 Pid = 3;
   uint64 Amount = 4;
@@ -66,7 +67,7 @@ message ListResponse {
 
 // 订单支付
 message PaidRequest {
-  int64 id = 1;
+  int64 Id = 1;
 }
 message PaidResponse {
 }
@@ -74,6 +75,7 @@ message PaidResponse {
 
 service Order {
   rpc Create(CreateRequest) returns(CreateResponse);
+  rpc CreateRevert(CreateRequest) returns(CreateResponse);
   rpc Update(UpdateRequest) returns(UpdateResponse);
   rpc Remove(RemoveRequest) returns(RemoveResponse);
   rpc Detail(DetailRequest) returns(DetailResponse);
